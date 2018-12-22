@@ -198,7 +198,7 @@ for f in files:
                 if 'log' in topic:
                     if 'question:start:' in msg.data:
                         current_question='q'+msg.data[-1]
-                        current_question_time=  0
+                        current_question_time= t
 
 
                 if 'log' in topic:
@@ -208,7 +208,7 @@ for f in files:
                         subject_answer=question_data[2]
                         right_answer  =question_data[4]
 
-                        time_to_answer= 0- current_question_time
+                        time_to_answer= (t- current_question_time).to_sec()
 
                         data[subject_id][section_id][current_question] = {'right_answer':right_answer,
                                                                           'subject_answer':subject_answer,
@@ -234,7 +234,8 @@ for f in files:
                     if 'stoped_on_turn' in msg.data:
                         stoped_on_turn_data = msg.data.split(":")
                         stoped_turn = int(stoped_on_turn_data[1])
-                        data[subject_id][section_id]['stoped_on_turn'] = stoped_on_turn_data
+                        data[subject_id][section_id]['stoped_on_turn'] = stoped_turn
+                        print 'finished_turns: ',stoped_turn
 
 
 
@@ -284,9 +285,8 @@ for f in files:
             data.pop(subject_id)
             bad_subject.append(subject_id)
 
-print data
 print "bad subject ", bad_subject
 #save data
 time_now = datetime.datetime.now().strftime("%d-%m-%Y_%H:%M")
 
-pickle.dump(obj=data, file=open('data/robot_interaction_data/raw_data_'+time_now, 'wb'))
+pickle.dump(obj=data, file=open('processed_data/processed_data'+time_now, 'wb'))
